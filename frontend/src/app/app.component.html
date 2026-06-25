@@ -1,0 +1,28 @@
+<mat-toolbar class="topbar">
+  <a class="brand" routerLink="/dashboard" aria-label="Meal Planner">
+    <span class="brand-mark">MP</span>
+    <span class="brand-text">Meal Planner</span>
+  </a>
+
+  @if (auth.isAuthenticated()) {
+    <nav class="nav" aria-label="Navigation principale">
+      @for (link of navLinks; track link.path) {
+        <a
+          mat-button
+          [routerLink]="link.path"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: link.path === '/dashboard' }">
+          <mat-icon aria-hidden="true">{{ link.icon }}</mat-icon>
+          <span>{{ link.label }}</span>
+        </a>
+      }
+      <button mat-icon-button type="button" (click)="logout()" aria-label="Deconnexion">
+        <mat-icon>logout</mat-icon>
+      </button>
+    </nav>
+  }
+</mat-toolbar>
+
+<main class="shell">
+  <router-outlet></router-outlet>
+</main>

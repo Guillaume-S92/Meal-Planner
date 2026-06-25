@@ -1,0 +1,431 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-create-ingredients
+      author: codex
+      changes:
+        - createTable:
+            tableName: ingredients
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_ingredients
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(160)
+                  constraints:
+                    nullable: false
+                    unique: true
+                    uniqueConstraintName: uk_ingredients_name
+              - column:
+                  name: shopping_category
+                  type: VARCHAR(80)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: default_unit
+                  type: VARCHAR(40)
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: 002-create-recipes
+      author: codex
+      changes:
+        - createTable:
+            tableName: recipes
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_recipes
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(180)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: TEXT
+              - column:
+                  name: servings
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: preparation_time_minutes
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: cooking_time_minutes
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: image_url
+                  type: VARCHAR(500)
+              - column:
+                  name: category
+                  type: VARCHAR(80)
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: 003-create-recipe-tags
+      author: codex
+      changes:
+        - createTable:
+            tableName: recipe_tags
+            columns:
+              - column:
+                  name: recipe_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: tag
+                  type: VARCHAR(80)
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            tableName: recipe_tags
+            columnNames: recipe_id, tag
+            constraintName: pk_recipe_tags
+        - addForeignKeyConstraint:
+            baseTableName: recipe_tags
+            baseColumnNames: recipe_id
+            referencedTableName: recipes
+            referencedColumnNames: id
+            constraintName: fk_recipe_tags_recipe
+            onDelete: CASCADE
+  - changeSet:
+      id: 004-create-recipe-ingredients
+      author: codex
+      changes:
+        - createTable:
+            tableName: recipe_ingredients
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_recipe_ingredients
+                    nullable: false
+              - column:
+                  name: recipe_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ingredient_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: quantity
+                  type: DECIMAL(10,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: unit
+                  type: VARCHAR(40)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: optional_flag
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: comment
+                  type: VARCHAR(255)
+        - addForeignKeyConstraint:
+            baseTableName: recipe_ingredients
+            baseColumnNames: recipe_id
+            referencedTableName: recipes
+            referencedColumnNames: id
+            constraintName: fk_recipe_ingredients_recipe
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            baseTableName: recipe_ingredients
+            baseColumnNames: ingredient_id
+            referencedTableName: ingredients
+            referencedColumnNames: id
+            constraintName: fk_recipe_ingredients_ingredient
+  - changeSet:
+      id: 005-create-recipe-steps
+      author: codex
+      changes:
+        - createTable:
+            tableName: recipe_steps
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_recipe_steps
+                    nullable: false
+              - column:
+                  name: recipe_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: step_order
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: duration_minutes
+                  type: INT
+        - addForeignKeyConstraint:
+            baseTableName: recipe_steps
+            baseColumnNames: recipe_id
+            referencedTableName: recipes
+            referencedColumnNames: id
+            constraintName: fk_recipe_steps_recipe
+            onDelete: CASCADE
+  - changeSet:
+      id: 006-create-meal-plans
+      author: codex
+      changes:
+        - createTable:
+            tableName: meal_plans
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_meal_plans
+                    nullable: false
+              - column:
+                  name: week_start_date
+                  type: DATE
+                  constraints:
+                    nullable: false
+                    unique: true
+                    uniqueConstraintName: uk_meal_plans_week
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: 007-create-meal-plan-items
+      author: codex
+      changes:
+        - createTable:
+            tableName: meal_plan_items
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_meal_plan_items
+                    nullable: false
+              - column:
+                  name: meal_plan_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: recipe_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: meal_date
+                  type: DATE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: meal_type
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false
+        - addUniqueConstraint:
+            tableName: meal_plan_items
+            columnNames: meal_plan_id, meal_date, meal_type
+            constraintName: uk_meal_plan_slot
+        - addForeignKeyConstraint:
+            baseTableName: meal_plan_items
+            baseColumnNames: meal_plan_id
+            referencedTableName: meal_plans
+            referencedColumnNames: id
+            constraintName: fk_meal_plan_items_plan
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            baseTableName: meal_plan_items
+            baseColumnNames: recipe_id
+            referencedTableName: recipes
+            referencedColumnNames: id
+            constraintName: fk_meal_plan_items_recipe
+  - changeSet:
+      id: 008-create-shopping-list-items
+      author: codex
+      changes:
+        - createTable:
+            tableName: shopping_list_items
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_shopping_list_items
+                    nullable: false
+              - column:
+                  name: meal_plan_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ingredient_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: quantity
+                  type: DECIMAL(10,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: unit
+                  type: VARCHAR(40)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: shopping_category
+                  type: VARCHAR(80)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: checked_flag
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: excluded_flag
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+        - addUniqueConstraint:
+            tableName: shopping_list_items
+            columnNames: meal_plan_id, ingredient_id, unit
+            constraintName: uk_shopping_list_item
+        - addForeignKeyConstraint:
+            baseTableName: shopping_list_items
+            baseColumnNames: meal_plan_id
+            referencedTableName: meal_plans
+            referencedColumnNames: id
+            constraintName: fk_shopping_list_items_plan
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            baseTableName: shopping_list_items
+            baseColumnNames: ingredient_id
+            referencedTableName: ingredients
+            referencedColumnNames: id
+            constraintName: fk_shopping_list_items_ingredient
+  - changeSet:
+      id: 009-create-app-users
+      author: codex
+      changes:
+        - createTable:
+            tableName: app_users
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_app_users
+                    nullable: false
+              - column:
+                  name: username
+                  type: VARCHAR(80)
+                  constraints:
+                    nullable: false
+                    unique: true
+                    uniqueConstraintName: uk_app_users_username
+              - column:
+                  name: password_hash
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: role
+                  type: VARCHAR(40)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: enabled
+                  type: BOOLEAN
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false

@@ -1,0 +1,81 @@
+<section class="page">
+  <div class="page-header">
+    <div>
+      <p class="page-kicker">Semaine en cours</p>
+      <h1 class="page-title">Organiser les repas facilement</h1>
+    </div>
+    <a mat-flat-button color="primary" routerLink="/recipes/new">
+      <mat-icon aria-hidden="true">add</mat-icon>
+      Nouvelle recette
+    </a>
+  </div>
+
+  @if (loading) {
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  } @else if (error) {
+    <div class="error-state">{{ error }}</div>
+  } @else if (vm) {
+    <div class="stats">
+      <mat-card>
+        <mat-card-content>
+          <mat-icon aria-hidden="true">restaurant_menu</mat-icon>
+          <strong>{{ vm.recipeCount }}</strong>
+          <span>recettes</span>
+        </mat-card-content>
+      </mat-card>
+      <mat-card>
+        <mat-card-content>
+          <mat-icon aria-hidden="true">event_available</mat-icon>
+          <strong>{{ vm.plannedMeals.length }}</strong>
+          <span>repas planifies</span>
+        </mat-card-content>
+      </mat-card>
+      <mat-card>
+        <mat-card-content>
+          <mat-icon aria-hidden="true">shopping_basket</mat-icon>
+          <strong>{{ vm.remainingShopping }}</strong>
+          <span>articles a acheter</span>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <div class="grid grid-2">
+      <section class="panel panel-pad">
+        <div class="section-title">
+          <h2>Planning</h2>
+          <a mat-button routerLink="/planner">Voir</a>
+        </div>
+        @if (vm.plannedMeals.length) {
+          <div class="meal-list">
+            @for (item of vm.plannedMeals.slice(0, 6); track item.id) {
+              <div class="meal-row">
+                <span>{{ formatDay(item.date) }}</span>
+                <strong>{{ item.mealType === 'LUNCH' ? 'Dejeuner' : 'Diner' }}</strong>
+                <em>{{ item.recipeName }}</em>
+              </div>
+            }
+          </div>
+        } @else {
+          <div class="empty-state">Aucun repas planifie cette semaine.</div>
+        }
+      </section>
+
+      <section class="panel panel-pad">
+        <div class="section-title">
+          <h2>Courses</h2>
+          <a mat-button routerLink="/shopping">Voir</a>
+        </div>
+        <div class="shopping-meter">
+          <span>{{ vm.shoppingTotal - vm.remainingShopping }} / {{ vm.shoppingTotal }}</span>
+          <progress [value]="vm.shoppingTotal - vm.remainingShopping" [max]="vm.shoppingTotal || 1"></progress>
+        </div>
+        @if (vm.nextRecipe) {
+          <a class="cook-link" [routerLink]="['/cook', vm.nextRecipe.id]">
+            <mat-icon aria-hidden="true">restaurant</mat-icon>
+            Continuer avec {{ vm.nextRecipe.name }}
+          </a>
+        }
+      </section>
+    </div>
+  }
+</section>

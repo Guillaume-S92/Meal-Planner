@@ -1,0 +1,61 @@
+<section class="page cook-page">
+  <div class="page-header">
+    <div>
+      <p class="page-kicker">Mobile first</p>
+      <h1 class="page-title">Mode cuisine</h1>
+    </div>
+    <mat-form-field appearance="outline" class="recipe-select">
+      <mat-label>Recette</mat-label>
+      <mat-select [value]="recipe?.id" (selectionChange)="selectRecipe($event.value)">
+        @for (item of recipes; track item.id) {
+          <mat-option [value]="item.id">{{ item.name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  @if (loading) {
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  } @else if (error) {
+    <div class="error-state">{{ error }}</div>
+  } @else if (!recipe) {
+    <div class="empty-state">Ajoutez une recette pour lancer le mode cuisine.</div>
+  } @else {
+    <section class="cook-layout">
+      <aside class="panel panel-pad ingredients">
+        <h2>{{ recipe.name }}</h2>
+        <p class="muted">{{ recipe.servings }} portions - {{ recipe.totalTimeMinutes }} min</p>
+        <ul>
+          @for (ingredient of recipe.ingredients; track ingredient.id) {
+            <li>
+              <strong>{{ ingredient.quantity }} {{ ingredient.unit }}</strong>
+              <span>{{ ingredient.ingredientName }}</span>
+            </li>
+          }
+        </ul>
+      </aside>
+
+      <mat-card class="step-card">
+        <mat-card-header>
+          <mat-card-title>Etape {{ stepIndex + 1 }} / {{ sortedSteps.length }}</mat-card-title>
+          @if (currentStep?.durationMinutes) {
+            <mat-card-subtitle>{{ currentStep?.durationMinutes }} min</mat-card-subtitle>
+          }
+        </mat-card-header>
+        <mat-card-content>
+          <p>{{ currentStep?.description }}</p>
+        </mat-card-content>
+        <mat-card-actions align="end">
+          <button mat-stroked-button type="button" [disabled]="stepIndex === 0" (click)="previousStep()">
+            <mat-icon aria-hidden="true">chevron_left</mat-icon>
+            Precedent
+          </button>
+          <button mat-flat-button color="primary" type="button" [disabled]="stepIndex >= sortedSteps.length - 1" (click)="nextStep()">
+            Suivant
+            <mat-icon aria-hidden="true">chevron_right</mat-icon>
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </section>
+  }
+</section>

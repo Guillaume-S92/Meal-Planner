@@ -1,0 +1,46 @@
+.planner-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(155px, 1fr));
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+
+.day-card {
+  min-width: 155px;
+}
+
+.day-card mat-card-title {
+  font-size: 1rem;
+}
+
+.meal-slot {
+  display: grid;
+  grid-template-columns: 1fr 42px;
+  gap: 6px;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.meal-slot span {
+  grid-column: 1 / -1;
+  color: #61726b;
+  font-size: 0.82rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.meal-slot mat-form-field {
+  width: 100%;
+}
+
+@media (max-width: 780px) {
+  .planner-grid {
+    grid-template-columns: 1fr;
+    overflow: visible;
+  }
+
+  .day-card {
+    min-width: 0;
+  }
+}

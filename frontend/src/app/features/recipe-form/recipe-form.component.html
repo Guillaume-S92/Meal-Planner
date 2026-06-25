@@ -1,0 +1,142 @@
+<section class="page">
+  <div class="page-header">
+    <div>
+      <p class="page-kicker">Edition</p>
+      <h1 class="page-title">{{ recipeId ? 'Modifier la recette' : 'Nouvelle recette' }}</h1>
+    </div>
+    <button mat-flat-button color="primary" type="button" [disabled]="saving" (click)="save()">
+      <mat-icon aria-hidden="true">save</mat-icon>
+      Enregistrer
+    </button>
+  </div>
+
+  @if (loading) {
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  }
+  @if (error) {
+    <div class="error-state">{{ error }}</div>
+  }
+
+  <form class="panel panel-pad" [formGroup]="form" (ngSubmit)="save()">
+    <div class="form-grid">
+      <mat-form-field appearance="outline">
+        <mat-label>Nom</mat-label>
+        <input matInput formControlName="name" required>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Categorie</mat-label>
+        <input matInput formControlName="category">
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>Description</mat-label>
+        <textarea matInput rows="3" formControlName="description"></textarea>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Portions</mat-label>
+        <input matInput type="number" min="1" formControlName="servings">
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Preparation (min)</mat-label>
+        <input matInput type="number" min="0" formControlName="preparationTimeMinutes">
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Cuisson (min)</mat-label>
+        <input matInput type="number" min="0" formControlName="cookingTimeMinutes">
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Image URL</mat-label>
+        <input matInput type="url" formControlName="imageUrl">
+      </mat-form-field>
+      <div class="tag-editor full">
+        <div class="toolbar-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Tag</mat-label>
+            <input matInput formControlName="tagInput" (keydown.enter)="$event.preventDefault(); addTag()">
+          </mat-form-field>
+          <button mat-stroked-button type="button" (click)="addTag()">
+            <mat-icon aria-hidden="true">add</mat-icon>
+            Tag
+          </button>
+        </div>
+        <mat-chip-set aria-label="Tags">
+          @for (tag of tags.controls; track $index) {
+            <mat-chip (removed)="removeTag($index)">
+              {{ tag.value }}
+              <button matChipRemove type="button" aria-label="Retirer le tag">
+                <mat-icon>cancel</mat-icon>
+              </button>
+            </mat-chip>
+          }
+        </mat-chip-set>
+      </div>
+    </div>
+
+    <section class="subsection">
+      <div class="subsection-head">
+        <h2>Ingredients</h2>
+        <button mat-stroked-button type="button" (click)="addIngredient()">
+          <mat-icon aria-hidden="true">add</mat-icon>
+          Ajouter
+        </button>
+      </div>
+      <div formArrayName="ingredients" class="repeat-list">
+        @for (group of ingredients.controls; track $index) {
+          <div class="repeat-row ingredient-row" [formGroupName]="$index">
+            <mat-form-field appearance="outline">
+              <mat-label>Ingredient</mat-label>
+              <input matInput formControlName="ingredientName">
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Categorie courses</mat-label>
+              <input matInput formControlName="shoppingCategory">
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Quantite</mat-label>
+              <input matInput type="number" min="0.01" step="0.01" formControlName="quantity">
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Unite</mat-label>
+              <input matInput formControlName="unit">
+            </mat-form-field>
+            <mat-checkbox formControlName="optional">Optionnel</mat-checkbox>
+            <mat-form-field appearance="outline">
+              <mat-label>Commentaire</mat-label>
+              <input matInput formControlName="comment">
+            </mat-form-field>
+            <button mat-icon-button type="button" (click)="removeIngredient($index)" aria-label="Retirer l'ingredient">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        }
+      </div>
+    </section>
+
+    <section class="subsection">
+      <div class="subsection-head">
+        <h2>Etapes</h2>
+        <button mat-stroked-button type="button" (click)="addStep()">
+          <mat-icon aria-hidden="true">add</mat-icon>
+          Ajouter
+        </button>
+      </div>
+      <div formArrayName="steps" class="repeat-list">
+        @for (group of steps.controls; track $index) {
+          <div class="repeat-row step-row" [formGroupName]="$index">
+            <span class="step-index">{{ $index + 1 }}</span>
+            <mat-form-field appearance="outline">
+              <mat-label>Description</mat-label>
+              <textarea matInput rows="2" formControlName="description"></textarea>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Duree (min)</mat-label>
+              <input matInput type="number" min="0" formControlName="durationMinutes">
+            </mat-form-field>
+            <button mat-icon-button type="button" (click)="removeStep($index)" aria-label="Retirer l'etape">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        }
+      </div>
+    </section>
+  </form>
+</section>

@@ -1,0 +1,52 @@
+<section class="page">
+  <div class="page-header">
+    <div>
+      <p class="page-kicker">Semaine du {{ weekIso }}</p>
+      <h1 class="page-title">Liste de courses</h1>
+    </div>
+    <div class="toolbar-row">
+      <button mat-icon-button type="button" (click)="previousWeek()" aria-label="Semaine precedente">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+      <button mat-icon-button type="button" (click)="nextWeek()" aria-label="Semaine suivante">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  @if (loading) {
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  } @else if (error) {
+    <div class="error-state">{{ error }}</div>
+  } @else {
+    <section class="panel panel-pad summary">
+      <strong>{{ remainingCount() }}</strong>
+      <span>articles restants sur {{ itemCount() }}</span>
+    </section>
+
+    @if (!itemCount()) {
+      <div class="empty-state">Planifiez des repas pour generer la liste.</div>
+    } @else {
+      <div class="category-grid">
+        @for (category of categories; track category.name) {
+          <section class="panel category">
+            <h2>{{ category.name }}</h2>
+            <div class="items">
+              @for (item of category.items; track item.id) {
+                <div class="shopping-item" [class.done]="item.checked" [class.excluded]="item.excluded">
+                  <mat-checkbox [checked]="item.checked" (change)="toggleChecked(item, $event.checked)">
+                    <strong>{{ item.ingredientName }}</strong>
+                    <span>{{ item.quantity }} {{ item.unit }}</span>
+                  </mat-checkbox>
+                  <mat-slide-toggle [checked]="item.excluded" (change)="toggleExcluded(item, $event.checked)">
+                    Stock
+                  </mat-slide-toggle>
+                </div>
+              }
+            </div>
+          </section>
+        }
+      </div>
+    }
+  }
+</section>

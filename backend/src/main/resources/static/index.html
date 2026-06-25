@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mon Menu de la Semaine</title>
+    <link rel="stylesheet" href="/styles.css?v=2">
+</head>
+<body>
+<div class="app-shell">
+    <aside class="sidebar">
+        <div class="brand">
+            <span class="brand-mark">M</span>
+            <div>
+                <strong>Mon Menu</strong>
+                <span>Semaine & courses</span>
+            </div>
+        </div>
+        <nav class="nav" aria-label="Navigation principale">
+            <button class="nav-item active" data-view="dashboard" title="Tableau de bord">⌂ <span>Tableau</span></button>
+            <button class="nav-item" data-view="recipes" title="Recettes">▦ <span>Recettes</span></button>
+            <button class="nav-item" data-view="planner" title="Planning">◫ <span>Planning</span></button>
+            <button class="nav-item" data-view="shopping" title="Liste de courses">☑ <span>Courses</span></button>
+            <button class="nav-item" data-view="cook" title="Mode cuisine">▶ <span>Cuisine</span></button>
+        </nav>
+    </aside>
+
+    <main class="content">
+        <section class="topbar">
+            <div>
+                <p class="eyebrow">Semaine du <span id="current-week-label"></span></p>
+                <h1 id="view-title">Tableau de bord</h1>
+            </div>
+            <div class="top-actions">
+                <button class="icon-button" id="previous-week" title="Semaine precedente">‹</button>
+                <button class="soft-button" id="today-week">Aujourd'hui</button>
+                <button class="icon-button" id="next-week" title="Semaine suivante">›</button>
+                <button class="primary-button" id="new-recipe">+ Recette</button>
+            </div>
+        </section>
+
+        <section id="messages" class="messages" aria-live="polite"></section>
+
+        <section id="dashboard-view" class="view active"></section>
+        <section id="recipes-view" class="view"></section>
+        <section id="planner-view" class="view"></section>
+        <section id="shopping-view" class="view"></section>
+        <section id="cook-view" class="view"></section>
+    </main>
+</div>
+
+<dialog id="recipe-dialog">
+    <form method="dialog" class="recipe-form" id="recipe-form">
+        <header class="dialog-header">
+            <div>
+                <p class="eyebrow">Recette</p>
+                <h2 id="recipe-form-title">Nouvelle recette</h2>
+            </div>
+            <button type="button" class="icon-button" id="close-recipe-dialog" title="Fermer">×</button>
+        </header>
+
+        <div class="form-grid">
+            <label>Nom
+                <input name="name" required>
+            </label>
+            <label>Categorie
+                <input name="category" list="category-options" placeholder="Plats principaux">
+            </label>
+            <label>Portions
+                <input name="servings" type="number" min="1" value="2" required>
+            </label>
+            <label>Preparation (min)
+                <input name="preparationTimeMinutes" type="number" min="0" value="10">
+            </label>
+            <label>Cuisson (min)
+                <input name="cookingTimeMinutes" type="number" min="0" value="0">
+            </label>
+            <label>Image URL
+                <input name="imageUrl" placeholder="https://...">
+            </label>
+        </div>
+
+        <label>Description
+            <textarea name="description" rows="3"></textarea>
+        </label>
+        <label>Tags
+            <input name="tags" placeholder="facile, pates, moins de 30 minutes">
+        </label>
+
+        <div class="form-section">
+            <div class="section-title">
+                <h3>Ingredients</h3>
+                <button type="button" class="soft-button" id="add-ingredient-row">+ Ingredient</button>
+            </div>
+            <div id="ingredient-rows" class="dynamic-list"></div>
+        </div>
+
+        <div class="form-section">
+            <div class="section-title">
+                <h3>Etapes</h3>
+                <button type="button" class="soft-button" id="add-step-row">+ Etape</button>
+            </div>
+            <div id="step-rows" class="dynamic-list"></div>
+        </div>
+
+        <footer class="dialog-actions">
+            <button type="button" class="soft-button" id="cancel-recipe">Annuler</button>
+            <button type="submit" class="primary-button">Enregistrer</button>
+        </footer>
+    </form>
+</dialog>
+
+<datalist id="category-options">
+    <option value="Plats principaux"></option>
+    <option value="Entrees"></option>
+    <option value="Desserts"></option>
+    <option value="Petit-dejeuner"></option>
+    <option value="Repas rapide"></option>
+    <option value="Vegetarien"></option>
+    <option value="Batch cooking"></option>
+</datalist>
+
+<script src="/app.js?v=2"></script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<section class="page">
+  <div class="page-header">
+    <div>
+      <p class="page-kicker">Semaine du {{ weekIso }}</p>
+      <h1 class="page-title">Planning</h1>
+    </div>
+    <div class="toolbar-row">
+      <button mat-icon-button type="button" (click)="previousWeek()" aria-label="Semaine precedente">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+      <button mat-stroked-button type="button" (click)="currentWeek()">Aujourd'hui</button>
+      <button mat-icon-button type="button" (click)="nextWeek()" aria-label="Semaine suivante">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  @if (loading) {
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  }
+  @if (error) {
+    <div class="error-state">{{ error }}</div>
+  }
+
+  <div class="planner-grid">
+    @for (day of days; track day.iso) {
+      <mat-card class="day-card">
+        <mat-card-header>
+          <mat-card-title>{{ day.label }}</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          @for (meal of mealTypes; track meal.value) {
+            <div class="meal-slot">
+              <span>{{ meal.label }}</span>
+              <mat-form-field appearance="outline">
+                <mat-label>Recette</mat-label>
+                <mat-select
+                  [value]="recipeIdFor(day.iso, meal.value)"
+                  [disabled]="savingKey === day.iso + '-' + meal.value"
+                  (selectionChange)="save(day.iso, meal.value, $event.value)">
+                  <mat-option [value]="null">Aucun repas</mat-option>
+                  @for (recipe of recipes; track recipe.id) {
+                    <mat-option [value]="recipe.id">{{ recipe.name }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+              @if (itemFor(day.iso, meal.value); as item) {
+                <button mat-icon-button type="button" (click)="remove(item)" aria-label="Retirer le repas">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              }
+            </div>
+          }
+        </mat-card-content>
+      </mat-card>
+    }
+  </div>
+</section>

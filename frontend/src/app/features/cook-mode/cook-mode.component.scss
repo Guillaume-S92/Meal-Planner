@@ -1,0 +1,67 @@
+.recipe-select {
+  width: min(100%, 340px);
+}
+
+.cook-layout {
+  display: grid;
+  grid-template-columns: minmax(240px, 320px) 1fr;
+  gap: 18px;
+  align-items: stretch;
+}
+
+.ingredients h2 {
+  margin: 0;
+  color: #20362f;
+}
+
+.ingredients ul {
+  display: grid;
+  gap: 10px;
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ingredients li {
+  display: grid;
+  gap: 2px;
+  padding: 10px;
+  border-radius: 8px;
+  background: #f7f1e9;
+}
+
+.ingredients strong {
+  color: #2f6f5e;
+}
+
+.step-card {
+  display: flex;
+  min-height: 420px;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 16px;
+}
+
+.step-card mat-card-content p {
+  margin: 32px 0;
+  color: #20362f;
+  font-size: clamp(1.35rem, 3vw, 2.2rem);
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+mat-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+@media (max-width: 860px) {
+  .cook-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .step-card {
+    min-height: 320px;
+  }
+}
