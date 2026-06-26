@@ -1,0 +1,53 @@
+# IDE / editors
+.idea/
+*.iml
+.vscode/
+
+# Codex / local agent workspace
+.agents/
+.codex/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+*.local
+
+# Logs
+*.log
+logs/
+
+# Java / Maven
+target/
+*.class
+
+# Spring local runtime data
+backend/data/
+backend/target/
+backend/*.log
+
+# Node / Angular
+node_modules/
+dist/
+.angular/
+.cache/
+coverage/
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+
+# Build artifacts
+*.jar
+*.war
+*.ear
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.swp

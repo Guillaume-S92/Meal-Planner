@@ -1,0 +1,68 @@
+<section class="page">
+  <div class="page-header">
+    <div>
+      <p class="page-kicker">Administration</p>
+      <h1 class="page-title">Utilisateurs</h1>
+    </div>
+  </div>
+
+  @if (loading) {
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  }
+  @if (error) {
+    <div class="error-state">{{ error }}</div>
+  }
+
+  <div class="grid grid-2">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Ajouter un compte</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <form [formGroup]="form" (ngSubmit)="create()">
+          <mat-form-field appearance="outline">
+            <mat-label>Identifiant</mat-label>
+            <input matInput formControlName="username" autocomplete="off">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Mot de passe temporaire</mat-label>
+            <input matInput type="password" formControlName="password" autocomplete="new-password">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Role</mat-label>
+            <mat-select formControlName="role">
+              <mat-option value="USER">Utilisateur</mat-option>
+              <mat-option value="ADMIN">Admin</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-slide-toggle formControlName="enabled">Actif</mat-slide-toggle>
+
+          <button mat-flat-button color="primary" type="submit" [disabled]="saving">
+            <mat-icon aria-hidden="true">person_add</mat-icon>
+            Creer
+          </button>
+        </form>
+      </mat-card-content>
+    </mat-card>
+
+    <section class="panel panel-pad">
+      <h2>Comptes existants</h2>
+      <div class="user-list">
+        @for (user of users; track user.id) {
+          <div class="user-row">
+            <div>
+              <strong>{{ user.username }}</strong>
+              <span>{{ user.role }}</span>
+            </div>
+            <mat-slide-toggle [checked]="user.enabled" (change)="toggleEnabled(user, $event.checked)">
+              Actif
+            </mat-slide-toggle>
+          </div>
+        }
+      </div>
+    </section>
+  </div>
+</section>

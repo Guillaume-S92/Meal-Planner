@@ -22,6 +22,14 @@
     <div class="error-state">{{ error }}</div>
   }
 
+  <section class="panel panel-pad planner-search">
+    <mat-form-field appearance="outline">
+      <mat-label>Rechercher une recette</mat-label>
+      <mat-icon matPrefix aria-hidden="true">search</mat-icon>
+      <input matInput [formControl]="recipeQuery" placeholder="Nom, categorie, tag">
+    </mat-form-field>
+  </section>
+
   <div class="planner-grid">
     @for (day of days; track day.iso) {
       <mat-card class="day-card">
@@ -39,11 +47,12 @@
                   [disabled]="savingKey === day.iso + '-' + meal.value"
                   (selectionChange)="save(day.iso, meal.value, $event.value)">
                   <mat-option [value]="null">Aucun repas</mat-option>
-                  @for (recipe of recipes; track recipe.id) {
+                  @for (recipe of filteredRecipes(); track recipe.id) {
                     <mat-option [value]="recipe.id">{{ recipe.name }}</mat-option>
                   }
                 </mat-select>
               </mat-form-field>
+              <p class="selected-recipe">{{ recipeNameFor(day.iso, meal.value) }}</p>
               @if (itemFor(day.iso, meal.value); as item) {
                 <button mat-icon-button type="button" (click)="remove(item)" aria-label="Retirer le repas">
                   <mat-icon>delete</mat-icon>

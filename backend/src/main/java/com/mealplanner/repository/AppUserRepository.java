@@ -1,0 +1,12 @@
+package com.mealplanner.repository;
+
+import com.mealplanner.domain.AppUser;
+import java.util.Optional;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface AppUserRepository extends JpaRepository<AppUser, Long> {
+
+    Optional<AppUser> findByUsernameIgnoreCase(String username);
+
+    boolean existsByUsernameIgnoreCase(String username);
+}

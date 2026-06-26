@@ -6,6 +6,7 @@ import { PlannerComponent } from './features/planner/planner.component';
 import { ShoppingListComponent } from './features/shopping-list/shopping-list.component';
 import { CookModeComponent } from './features/cook-mode/cook-mode.component';
 import { LoginComponent } from './features/login/login.component';
+import { AdminUsersComponent } from './features/admin-users/admin-users.component';
 import { authGuard } from './core/auth.guard';
 
 export const routes: Routes = [
@@ -18,6 +19,7 @@ export const routes: Routes = [
   { path: 'shopping', component: ShoppingListComponent, title: 'Courses', canActivate: [authGuard] },
   { path: 'cook', component: CookModeComponent, title: 'Mode cuisine', canActivate: [authGuard] },
   { path: 'cook/:id', component: CookModeComponent, title: 'Mode cuisine', canActivate: [authGuard] },
+  { path: 'admin/users', component: AdminUsersComponent, title: 'Utilisateurs', canActivate: [authGuard] },
   { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
   { path: '**', redirectTo: 'dashboard' }
 ];

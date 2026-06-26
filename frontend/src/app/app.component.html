@@ -6,7 +6,7 @@
 
   @if (auth.isAuthenticated()) {
     <nav class="nav" aria-label="Navigation principale">
-      @for (link of navLinks; track link.path) {
+      @for (link of visibleNavLinks(); track link.path) {
         <a
           mat-button
           [routerLink]="link.path"

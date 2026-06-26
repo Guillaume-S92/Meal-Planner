@@ -74,6 +74,8 @@ Avant de deployer, prevoir aussi HTTPS, un mot de passe MySQL fort, un utilisate
 
 Il n'y a pas de formulaire d'inscription public. Pour creer ton premier compte, active temporairement le bootstrap au demarrage :
 
+Avec PowerShell :
+
 ```powershell
 cd backend
 $env:MEAL_PLANNER_BOOTSTRAP_ADMIN_ENABLED="true"
@@ -83,9 +85,36 @@ $env:MEAL_PLANNER_JWT_SECRET="un-secret-long-aleatoire-de-32-caracteres-minimum"
 mvn -Pboot-plugin spring-boot:run
 ```
 
+Avec l'invite de commandes Windows `cmd.exe` :
+
+```bat
+cd backend
+set MEAL_PLANNER_BOOTSTRAP_ADMIN_ENABLED=true
+set MEAL_PLANNER_ADMIN_USERNAME=guillaume
+set MEAL_PLANNER_ADMIN_PASSWORD=un-mot-de-passe-fort
+set MEAL_PLANNER_JWT_SECRET=un-secret-long-aleatoire-de-32-caracteres-minimum
+mvn -Pboot-plugin spring-boot:run
+```
+
 Une fois l'utilisateur cree en base, coupe le serveur et relance sans `MEAL_PLANNER_BOOTSTRAP_ADMIN_ENABLED`. Ne mets jamais de mot de passe en clair directement dans la table `app_users` : le backend stocke uniquement un hash PBKDF2.
 
-Pour ajouter un autre utilisateur sans formulaire public, tu peux relancer ponctuellement le bootstrap avec un autre `MEAL_PLANNER_ADMIN_USERNAME` et un autre mot de passe.
+### Ajouter des utilisateurs ensuite
+
+Le bootstrap sert uniquement a creer le premier admin. Ensuite, connecte-toi avec ce compte et ouvre :
+
+```text
+Admin > Utilisateurs
+```
+
+Cette page appelle des endpoints proteges par le role `ADMIN` :
+
+```text
+GET   /api/admin/users
+POST  /api/admin/users
+PATCH /api/admin/users/{id}
+```
+
+Il n'y a toujours pas d'inscription publique. Une requete SQL directe est possible, mais elle n'est pas recommandee pour l'usage courant parce qu'il faut generer le hash PBKDF2 exact du mot de passe. L'interface admin evite de redemarrer l'application et evite d'ecrire des secrets en clair en base.
 
 Si tu veux relancer en H2 local :
 

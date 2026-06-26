@@ -129,3 +129,25 @@ export interface AuthResponse {
   token: string;
   user: CurrentUserResponse;
 }
+
+export interface AdminUserResponse {
+  id: number;
+  username: string;
+  role: 'USER' | 'ADMIN';
+  enabled: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AdminUserCreateRequest {
+  username: string;
+  password: string;
+  role: 'USER' | 'ADMIN';
+  enabled: boolean;
+}
+
+export interface AdminUserUpdateRequest {
+  enabled?: boolean;
+  role?: 'USER' | 'ADMIN';
+  password?: string;
+}

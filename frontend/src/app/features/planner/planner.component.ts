@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { forkJoin } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -22,6 +23,7 @@ interface DaySlot {
   standalone: true,
   imports: [
     CommonModule,
+    ReactiveFormsModule,
     MatButtonModule,
     MatCardModule,
     MatFormFieldModule,
@@ -33,6 +35,7 @@ interface DaySlot {
   styleUrl: './planner.component.scss'
 })
 export class PlannerComponent implements OnInit {
+  protected readonly recipeQuery = new FormControl('', { nonNullable: true });
   protected weekStart = startOfWeek();
   protected days: DaySlot[] = [];
   protected recipes: RecipeResponse[] = [];
@@ -81,13 +84,32 @@ export class PlannerComponent implements OnInit {
     return this.itemFor(day, mealType)?.recipeId ?? null;
   }
 
+  protected recipeNameFor(day: string, mealType: MealType): string {
+    return this.itemFor(day, mealType)?.recipeName ?? 'Aucun repas';
+  }
+
+  protected filteredRecipes(): RecipeResponse[] {
+    const query = this.recipeQuery.value.trim().toLowerCase();
+    if (!query) {
+      return this.recipes;
+    }
+    return this.recipes.filter((recipe) => {
+      const haystack = [
+        recipe.name,
+        recipe.category ?? '',
+        ...(recipe.tags ?? [])
+      ].join(' ').toLowerCase();
+      return haystack.includes(query);
+    });
+  }
+
   protected save(day: string, mealType: MealType, recipeId: number | null): void {
     const existing = this.itemFor(day, mealType);
-    if (!recipeId && existing) {
+    if (recipeId === null && existing) {
       this.remove(existing);
       return;
     }
-    if (!recipeId) {
+    if (recipeId === null) {
       return;
     }
     this.savingKey = `${day}-${mealType}`;
@@ -104,13 +126,17 @@ export class PlannerComponent implements OnInit {
   }
 
   protected remove(item: MealPlanItemResponse): void {
+    const previousItems = this.items;
     this.savingKey = `${item.date}-${item.mealType}`;
+    this.items = this.items.filter((existing) => existing.id !== item.id);
     this.plans.removeItem(this.weekIso, item.id).subscribe({
       next: (plan) => {
         this.items = plan.items;
         this.savingKey = '';
+        this.loadPlanOnly();
       },
       error: () => {
+        this.items = previousItems;
         this.error = 'Impossible de retirer ce repas.';
         this.savingKey = '';
       }
@@ -137,6 +163,17 @@ export class PlannerComponent implements OnInit {
       error: () => {
         this.error = 'Impossible de charger le planning.';
         this.loading = false;
+      }
+    });
+  }
+
+  private loadPlanOnly(): void {
+    this.plans.getWeek(this.weekIso).subscribe({
+      next: (plan) => {
+        this.items = plan.items;
+      },
+      error: () => {
+        this.error = 'Planning supprime, mais le rechargement a echoue.';
       }
     });
   }

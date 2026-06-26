@@ -1,0 +1,48 @@
+form {
+  display: grid;
+  gap: 14px;
+  margin-top: 16px;
+}
+
+h2 {
+  margin: 0 0 16px;
+  color: #20362f;
+  font-size: 1.1rem;
+}
+
+.user-list {
+  display: grid;
+  gap: 10px;
+}
+
+.user-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  background: #f7f1e9;
+}
+
+.user-row div {
+  display: grid;
+  gap: 2px;
+}
+
+.user-row strong {
+  color: #20362f;
+}
+
+.user-row span {
+  color: #66766f;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+@media (max-width: 680px) {
+  .user-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

@@ -69,8 +69,10 @@ public class MealPlanService {
         if (!item.getMealPlan().getId().equals(mealPlan.getId())) {
             throw new ResourceNotFoundException("Element de planning introuvable pour cette semaine : " + itemId);
         }
+        mealPlan.removeItem(item);
         mealPlanItemRepository.delete(item);
-        return toResponse(mealPlan);
+        mealPlanItemRepository.flush();
+        return getWeek(weekStart);
     }
 
     @Transactional
