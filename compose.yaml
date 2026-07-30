@@ -1,0 +1,59 @@
+services:
+  mysql:
+    image: mysql:8.4
+
+    environment:
+      MYSQL_DATABASE: meal_planner
+      MYSQL_USER: meal_planner
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+
+    ports:
+      # Port du PC : port du conteneur
+      # 3307 évite un conflit avec un éventuel MySQL local sur 3306.
+      - "3307:3306"
+
+    volumes:
+      # Les données MySQL seront conservées en dehors du conteneur.
+      - mysql_data:/var/lib/mysql
+
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "mysqladmin ping -h localhost -u root -p$${MYSQL_ROOT_PASSWORD} --silent"
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    image: meal-planner:local
+
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+    environment:
+      MYSQL_URL: jdbc:mysql://mysql:3306/meal_planner?createDatabaseIfNotExist=true&serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false
+      MYSQL_USER: meal_planner
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+
+      MEAL_PLANNER_JWT_SECRET: ${MEAL_PLANNER_JWT_SECRET}
+
+      MEAL_PLANNER_BOOTSTRAP_ADMIN_ENABLED: ${MEAL_PLANNER_BOOTSTRAP_ADMIN_ENABLED}
+      MEAL_PLANNER_ADMIN_USERNAME: ${MEAL_PLANNER_ADMIN_USERNAME}
+      MEAL_PLANNER_ADMIN_PASSWORD: ${MEAL_PLANNER_ADMIN_PASSWORD}
+
+      MEAL_PLANNER_SEED_ENABLED: ${MEAL_PLANNER_SEED_ENABLED}
+
+    ports:
+      - "8080:8080"
+
+volumes:
+  mysql_data:
