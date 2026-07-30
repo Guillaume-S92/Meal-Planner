@@ -12,6 +12,8 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import java.math.BigDecimal;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(name = "recipe_ingredients")
@@ -37,6 +39,7 @@ public class RecipeIngredient {
     @Column(nullable = false, length = 40)
     private String unit;
 
+    @JdbcTypeCode(SqlTypes.TINYINT)
     @Column(name = "optional_flag", nullable = false)
     private boolean optional;
 

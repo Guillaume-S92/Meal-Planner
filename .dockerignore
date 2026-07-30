@@ -1,0 +1,42 @@
+# Git
+.git
+.github
+
+# IDE
+.idea
+.vscode
+*.iml
+.agents
+
+# Angular / Node
+frontend/node_modules
+frontend/dist
+frontend/.angular
+frontend/coverage
+node_modules
+dist
+
+# Java / Maven
+backend/target
+target
+*.class
+*.jar
+*.war
+
+# Environnement et secrets
+.env
+.env.*
+!.env.example
+*.local
+
+# Logs et fichiers temporaires
+*.log
+logs
+tmp
+temp
+*.tmp
+
+# Système
+.DS_Store
+Thumbs.db
+desktop.ini
