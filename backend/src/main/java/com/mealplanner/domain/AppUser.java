@@ -10,6 +10,8 @@ import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import java.time.Instant;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(name = "app_users")
@@ -31,6 +33,7 @@ public class AppUser {
     @Column(nullable = false, length = 40)
     private String role = "USER";
 
+    @JdbcTypeCode(SqlTypes.TINYINT)
     @Column(nullable = false)
     private boolean enabled = true;
 

@@ -14,6 +14,8 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import java.math.BigDecimal;
 import java.time.Instant;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(
@@ -46,9 +48,11 @@ public class ShoppingListItem {
     @Column(name = "shopping_category", nullable = false, length = 80)
     private String shoppingCategory;
 
+    @JdbcTypeCode(SqlTypes.TINYINT)
     @Column(name = "checked_flag", nullable = false)
     private boolean checked;
 
+    @JdbcTypeCode(SqlTypes.TINYINT)
     @Column(name = "excluded_flag", nullable = false)
     private boolean excluded;
 

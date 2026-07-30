@@ -21,11 +21,11 @@ services:
       test:
         [
           "CMD-SHELL",
-          "mysqladmin ping -h localhost -u root -p$${MYSQL_ROOT_PASSWORD} --silent"
+          "mysql -h 127.0.0.1 -u$${MYSQL_USER} -p$${MYSQL_PASSWORD} -D $${MYSQL_DATABASE} -e 'SELECT 1' > /dev/null 2>&1"
         ]
       interval: 10s
       timeout: 5s
-      retries: 10
+      retries: 15
       start_period: 30s
 
   app:
@@ -35,14 +35,19 @@ services:
 
     image: meal-planner:local
 
+    restart: on-failure
+
     depends_on:
       mysql:
         condition: service_healthy
 
     environment:
+      SPRING_PROFILES_ACTIVE: liquibase
+
       MYSQL_URL: jdbc:mysql://mysql:3306/meal_planner?createDatabaseIfNotExist=true&serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false
       MYSQL_USER: meal_planner
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+
 
       MEAL_PLANNER_JWT_SECRET: ${MEAL_PLANNER_JWT_SECRET}
 

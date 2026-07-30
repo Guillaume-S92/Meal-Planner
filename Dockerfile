@@ -27,7 +27,7 @@ WORKDIR /app
 # Le pom est copié séparément afin de mettre les dépendances Maven en cache.
 COPY backend/pom.xml ./
 
-RUN mvn -B -Pboot-plugin dependency:go-offline
+RUN mvn -B -Pboot-plugin,liquibase dependency:go-offline
 
 # Copie du code Spring Boot.
 COPY backend/src ./src
@@ -42,7 +42,7 @@ COPY --from=frontend-build \
     ./src/main/resources/static/
 
 # Compilation et exécution des tests du backend.
-RUN mvn -B -Pboot-plugin clean package
+RUN mvn -B -Pboot-plugin,liquibase clean package
 
 
 FROM eclipse-temurin:17-jre-alpine AS runtime
